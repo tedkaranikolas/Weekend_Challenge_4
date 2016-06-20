@@ -73,7 +73,7 @@ function choreDisplay(tasks){
      //$('#outputDiv').append(choreData);
      $('#outputDiv').append('<p>' + tasks[i].chore + ', Completed: ' + tasks[i].completed + ', Date Assigned: ' + tasks[i].date_assigned + '</p>');
      $('#outputDiv').append('<button class="deleteRecord" data-id="' + tasks[i].id + '">Delete</button>');
-     $('#outputDiv').append('<button class="choreFinished" data-id="' + tasks[i].id + '">Update Chore Status</button>');
+     $('#outputDiv').append('<button class="choreFinished" data-id="' + tasks[i].id + '">Update Status</button>');
   }//end for loop to generate 'cells' for display
  }//function to append end
 

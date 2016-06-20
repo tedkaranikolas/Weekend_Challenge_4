@@ -25,7 +25,7 @@ app.post('/postChoreDelete', urlencodedParser, function(req, res){
   console.log('Bilo about to delete ID ' + req.body.id );
   var thisID = req.body.id;
   pg.connect(connectionString, function(err, client, done){
-    client.query('DELETE FROM tasks * WHERE id=' + thisID);
+    client.query('DELETE FROM tasks WHERE id=' + thisID);
     done();
     res.end();//could be extra
   });
@@ -36,7 +36,7 @@ app.post('/postChoreUpdate', urlencodedParser, function(req, res){
   console.log('Bilo about to update ' + req.body.id );
   var thisID = req.body.id;
   pg.connect(connectionString, function(err, client, done){
-    client.query('UPDATE tasks SET  * WHERE id=' + thisID);
+    client.query('UPDATE tasks set completed=NOT completed WHERE id=' + thisID);
     done();
     res.end();//could be extra
   });

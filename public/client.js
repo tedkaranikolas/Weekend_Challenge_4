@@ -14,19 +14,22 @@ $('#outputDiv').on('click', '.choreFinished', choreComplete);
 function choreComplete(){
   var completeID = $(this).data('id');
   var completeRecord = {
-    "id" : updateID
+    "id" : completeID
   };
   $.ajax({
     type : 'POST',
     url : '/postChoreUpdate',
-    data: choreUpdate
+    data: completeRecord,
+    success: function(){
+      getChoreDB();
+    }
   });
-getChoreDB();
 }
 
 //a function to delete a chore from both the DB and the DOM via its ID in the DB 'tasks'
 function choreDelete(){
-  var deleteID = $(this).data('id');
+  console.log($(this).attr('data-id'));
+  var deleteID = $(this).attr('data-id');
   var deleteRecord = {
     "id" : deleteID
   };
@@ -34,9 +37,12 @@ function choreDelete(){
   $.ajax({
     type : 'POST',
     url : '/postChoreDelete',
-    data: choreDelete
+    data: deleteRecord,
+    success: function(){
+      getChoreDB();
+    }
   });
-getChoreDB();
+
 }
 
 //bottleneck point for data entry and retrieval

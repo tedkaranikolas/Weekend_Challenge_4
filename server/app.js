@@ -27,8 +27,8 @@ app.post('/postChoreDelete', urlencodedParser, function(req, res){
   pg.connect(connectionString, function(err, client, done){
     client.query('DELETE FROM tasks WHERE id=' + thisID);
     done();
-    res.end();//could be extra
   });
+  res.end();//could be extra
 });
 
 //establishes path/route for updating a chore's status

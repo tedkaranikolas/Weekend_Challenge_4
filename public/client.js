@@ -1,20 +1,56 @@
-// Here are the specific components for the challenge:
-//
-// x--Create a front end experience that allows a user to create a task.
-// x--When the task is created, it should be stored inside of a database (SQL)
-// Whenever a task is created the front end should refresh to show all tasks that need to be completed.
-// Each task should have an option to 'Complete' or 'Delete'.
-// When a task is complete, its visual representation should change on the front end (for example, the background of the task container could change from gray to green, as well as the complete option 'checked off'. Each of these are accomplished in CSS, but will need to hook into logic to know whether or not the task is complete)
-// Whether or not a task is complete should also be stored in the database.
-// Deleting a task should remove it both from the Front End as well as the Database.
+var deletedChore = [];
 
 console.log('hello from client.js');
 
 $(document).ready (function(){
   console.log('hello from jquery');
 
-  $('#addChore').on('click', function(){
-  console.log('button clicked');
+$('#submitChore').on('click', postChore);
+getChoreDB();
+$('#outputDiv').on('click', '.deleteRecord', choreDelete);
+$('#outputDiv').on('click', '.choreFinished', choreComplete);
+
+//updates the status of whether or not a chore is completed on the dom and in the DB 'tasks'
+function choreComplete(){
+  var completeID = $(this).data('id');
+  var completeRecord = {
+    "id" : updateID
+  };
+  $.ajax({
+    type : 'POST',
+    url : '/postChoreUpdate',
+    data: choreUpdate
+  });
+getChoreDB();
+}
+
+//a function to delete a chore from both the DB and the DOM via its ID in the DB 'tasks'
+function choreDelete(){
+  var deleteID = $(this).data('id');
+  var deleteRecord = {
+    "id" : deleteID
+  };
+  //deletedChore.push();
+  $.ajax({
+    type : 'POST',
+    url : '/postChoreDelete',
+    data: choreDelete
+  });
+getChoreDB();
+}
+
+//bottleneck point for data entry and retrieval
+function getChoreDB(){
+    $.ajax({
+      type: 'GET',
+      url: '/retrieveChore',
+      success: function(data){
+        choreDisplay(data);
+    }
+  });
+}
+//sets up chore object to be sent to DB upon capturing data from the DOM
+function postChore(){
   var enteredChore = $('#choreIn').val();
   var newChore = {
     "chore" : enteredChore,
@@ -26,25 +62,19 @@ $(document).ready (function(){
     url: '/sendNewChore',
     data: newChore
     });//end ajax
-});//end onclick function
+}//end setting up the submit to send to DB
 
-function getFromDB(){
-    $.ajax({
-      type: 'GET',
-      url: '/retrieveChore',
-      success: function(data){
-        choreDisplay(data);
-    }
-  });
-}
-
-function choreDisplay(choreData){
+//appends and displays chores on the DOM, in addition to chore updates and chore deletions
+function choreDisplay(tasks){
   $('#addChore').val('');
   $('#outputDiv').empty();
-  for( var i = 0; i<choreToDo.length; i++){
-    var choreListed = '<p>' + choreTodo[i].chore + ', Completed: ' + choreTodo[i].completed + ', Date Assigned: ' + choreTodo[i].date_assigned + '</p>';
-     console.log(choreListed);
-     $('#outputDiv').append(choreListed);
+  for( var i = 0; i<tasks.length; i++){
+    //var choreData = '<p>' + tasks[i].chore + ', Completed: ' + tasks[i].completed + ', Date Assigned: ' + tasks[i].date_assigned + '</p>';
+     //$('#outputDiv').append(choreData);
+     $('#outputDiv').append('<p>' + tasks[i].chore + ', Completed: ' + tasks[i].completed + ', Date Assigned: ' + tasks[i].date_assigned + '</p>');
+     $('#outputDiv').append('<button class="deleteRecord" data-id="' + tasks[i].id + '">Delete</button>');
+     $('#outputDiv').append('<button class="choreFinished" data-id="' + tasks[i].id + '">Update Chore Status</button>');
   }//end for loop to generate 'cells' for display
  }//function to append end
+
 });//end jquery
